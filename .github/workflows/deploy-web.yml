@@ -1,0 +1,52 @@
+# Builds the web / PWA version and publishes it to GitHub Pages:
+#   https://<user>.github.io/LunaDrawing/
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+name: Deploy web app
+
+on:
+  push:
+    branches: [main, claude/drawing-game-ios-android-v53o41]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Build web app
+        run: |
+          npx setup-skia-web public
+          npx expo export --platform web
+          cp dist/index.html dist/404.html
+        env:
+          CI: 1
+          EXPO_BASE_URL: /${{ github.event.repository.name }}
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -82,6 +82,23 @@ npm test            # engine + drawings tests (runs real Skia in Node)
 npm run typecheck
 ```
 
+## Install from the web (PWA)
+
+The web version is a Progressive Web App: open it in Chrome on Android (or Safari on iPad),
+then **⋮ → Add to Home screen** / **Install app** (Safari: **Share → Add to Home Screen**).
+It gets its own icon, opens full screen with no browser bars, and works offline after the first visit.
+On the web, 📸 downloads the picture instead of saving to Photos, and there's no vibration.
+
+Hosting: [`.github/workflows/deploy-web.yml`](.github/workflows/deploy-web.yml) publishes it to
+GitHub Pages at `https://<user>.github.io/LunaDrawing/` on every push.
+One-time setup: repo **Settings → Pages → Source: GitHub Actions**.
+(GitHub Pages needs a public repo or a paid GitHub plan. Any static host works too:
+run `npx setup-skia-web public && npx expo export --platform web` and upload the `dist` folder, e.g. to Netlify Drop.
+Set `EXPO_BASE_URL=/some/path` when the site doesn't live at the domain root.)
+
+PWA files: `public/index.html` (page template), `public/manifest.json`, `public/sw.js` (offline cache),
+icons in `public/` (regenerate with `python3 scripts/make-icons.py`).
+
 ## Install on an Android tablet or phone (APK)
 
 Builds run on Expo's servers (EAS), so you don't need Android Studio. You need a free account at [expo.dev](https://expo.dev/signup).
