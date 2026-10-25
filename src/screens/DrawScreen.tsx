@@ -278,7 +278,7 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
                   disabled={tool === 'fill'}
                   onPress={() => pick(setSize)(s)}
                 >
-                  <View style={{ width: s, height: s, borderRadius: s / 2, backgroundColor: color === '#FFFFFF' ? '#DDD' : color }} />
+                  <SizeDot size={s} color={color} />
                 </RoundButton>
               ))}
           <View style={styles.spacer} />
@@ -298,6 +298,12 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
       <Celebration trigger={party} />
     </SafeAreaView>
   );
+}
+
+/** Brush size preview, scaled so the biggest size still fits in its button. */
+function SizeDot({ size, color }: { size: number; color: string }) {
+  const d = Math.round((size * 32) / SIZES[SIZES.length - 1]);
+  return <View style={{ width: d, height: d, borderRadius: d / 2, backgroundColor: color === '#FFFFFF' ? '#DDD' : color }} />;
 }
 
 const styles = StyleSheet.create({

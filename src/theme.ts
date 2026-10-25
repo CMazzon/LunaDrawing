@@ -36,7 +36,7 @@ export const TOOLS = ALL_TOOLS.filter((t) => !HIDDEN_TOOLS.includes(t.id));
 export const STAMPS: StampId[] = ['star', 'heart', 'flower', 'bubble'];
 
 /** Brush sizes in screen points: small, medium, big. */
-export const SIZES = [8, 16, 30];
+export const SIZES = [12, 24, 44];
 
 export const PAPERS = {
   white: '#FFFFFF',
