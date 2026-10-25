@@ -17,3 +17,10 @@ export function lighten(color: string, amount: number) {
   const b = mix(n & 255);
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
 }
+
+/** True for dark #rrggbb colors (like the night paper). */
+export function isDark(color: string) {
+  const n = parseInt(color.slice(1), 16);
+  const luminance = 0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
+  return luminance < 128;
+}

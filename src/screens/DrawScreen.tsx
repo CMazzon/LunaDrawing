@@ -20,7 +20,7 @@ import { distance } from '../engine/geometry';
 import { add, canUndo, clear, emptyHistory, undo, type History } from '../engine/history';
 import { fitPage, hitTest, preparePage } from '../engine/page';
 import { newSeed } from '../engine/random';
-import { backgroundColor, recordOutline, recordScene, recordStroke } from '../engine/render';
+import { backgroundColor, recordOutline, recordScene, recordStroke, recordSymmetryGuide } from '../engine/render';
 import { BACKGROUND, type Point, type StampId, type Stroke, type Symmetry } from '../engine/types';
 import { bump, cheer, tick } from '../haptics';
 import { savePicture } from '../save';
@@ -74,6 +74,10 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
   const outline = useMemo(
     () => (page && fit ? recordOutline(page, fit, width, height) : null),
     [page, fit, width, height],
+  );
+  const guide = useMemo(
+    () => (ready ? recordSymmetryGuide(symmetry, width, height, background) : null),
+    [symmetry, ready, width, height, background],
   );
   const live = current.current && ready ? recordStroke(current.current, width, height, background) : null;
 
@@ -194,6 +198,7 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
         {ready && (
           <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
             {scene && <Picture picture={scene} />}
+            {guide && <Picture picture={guide} />}
             {live && <Picture picture={live} />}
             {outline && <Picture picture={outline} />}
           </Canvas>

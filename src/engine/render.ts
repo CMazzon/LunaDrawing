@@ -1,8 +1,9 @@
 import { ClipOp, PaintStyle, Skia, StrokeCap, StrokeJoin, type SkPicture } from '@shopify/react-native-skia';
 
 import { fillPaint, paintStroke } from './brushes';
+import { isDark } from './color';
 import { DEFAULT_OUTLINE, type Fit, type Page } from './page';
-import { BACKGROUND, type Action, type Stroke } from './types';
+import { BACKGROUND, type Action, type Stroke, type Symmetry } from './types';
 
 export const OUTLINE_COLOR = '#222222';
 
@@ -81,5 +82,33 @@ export function recordOutline(page: Page, fit: Fit, width: number, height: numbe
     canvas.drawPath(page.shapes[i], paint);
     canvas.restore();
   });
+  return rec.finishRecordingAsPicture();
+}
+
+/**
+ * Dashed lines showing the mirror / kaleidoscope axes, so it's obvious why
+ * a stroke shows up twice. Only on screen: never part of the saved picture.
+ */
+export function recordSymmetryGuide(symmetry: Symmetry, width: number, height: number, background: string) {
+  if (symmetry === 1) return null;
+  const { rec, canvas } = recorder(width, height);
+  const paint = Skia.Paint();
+  paint.setAntiAlias(true);
+  paint.setColor(Skia.Color(isDark(background) ? '#FFFFFF66' : '#3B2E5A55'));
+  paint.setStyle(PaintStyle.Stroke);
+  paint.setStrokeWidth(3);
+  paint.setStrokeCap(StrokeCap.Round);
+  paint.setPathEffect(Skia.PathEffect.MakeDash([12, 10], 0));
+  const cx = width / 2;
+  const cy = height / 2;
+  if (symmetry === 2) {
+    canvas.drawLine(cx, 0, cx, height, paint);
+  } else {
+    const reach = Math.hypot(width, height);
+    for (let i = 0; i < symmetry; i++) {
+      const a = ((-90 + (360 / symmetry) * i) * Math.PI) / 180;
+      canvas.drawLine(cx, cy, cx + Math.cos(a) * reach, cy + Math.sin(a) * reach, paint);
+    }
+  }
   return rec.finishRecordingAsPicture();
 }

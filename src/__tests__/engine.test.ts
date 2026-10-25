@@ -2,7 +2,8 @@ import { findDrawing } from '../drawings';
 import { walk } from '../engine/geometry';
 import { add, canUndo, clear, emptyHistory, undo } from '../engine/history';
 import { fitPage, hitTest, preparePage } from '../engine/page';
-import { backgroundColor, recordOutline, recordScene } from '../engine/render';
+import { isDark } from '../engine/color';
+import { backgroundColor, recordOutline, recordScene, recordSymmetryGuide } from '../engine/render';
 import { BACKGROUND, type Action, type BrushId, type Stroke, type Symmetry } from '../engine/types';
 
 const cat = findDrawing('cat')!;
@@ -104,5 +105,19 @@ describe('rendering', () => {
     for (const b of brushes) for (const s of symmetries) for (const n of [1, 30]) actions.push(stroke(b, s, n));
     expect(recordScene(actions, 300, 300, '#FFFFFF', page, fit)).toBeTruthy();
     expect(recordOutline(page, fit, 300, 300)).toBeTruthy();
+  });
+});
+
+describe('symmetry guide', () => {
+  it('shows only when mirror or kaleidoscope is on', () => {
+    expect(recordSymmetryGuide(1, 300, 300, '#FFFFFF')).toBeNull();
+    expect(recordSymmetryGuide(2, 300, 300, '#FFFFFF')).toBeTruthy();
+    expect(recordSymmetryGuide(6, 300, 300, '#14123A')).toBeTruthy();
+  });
+
+  it('picks a guide color that shows on the paper', () => {
+    expect(isDark('#14123A')).toBe(true);
+    expect(isDark('#FFFFFF')).toBe(false);
+    expect(isDark('#FFD60A')).toBe(false);
   });
 });
