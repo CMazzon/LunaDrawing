@@ -54,6 +54,12 @@ describe('history', () => {
     expect(undo(h).actions).toEqual([fill('#111111')]);
   });
 
+  it('ignores tapping the same spot with the same color again', () => {
+    const h = add(add(emptyHistory, fill('#111111')), fill('#111111'));
+    expect(h.actions).toHaveLength(1);
+    expect(add(h, fill('#222222')).actions).toHaveLength(2);
+  });
+
   it('forgets the cleared picture once you draw again', () => {
     const h = add(clear(add(emptyHistory, fill('#111111'))), fill('#222222'));
     expect(undo(undo(h)).actions).toEqual([]);

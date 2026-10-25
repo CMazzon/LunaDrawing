@@ -8,8 +8,20 @@ export const PALETTE = [
 
 export type Tool = BrushId | 'fill';
 
+/**
+ * Switch features on or off without deleting their code.
+ * Turned-off tools and pages just don't show up on screen.
+ */
+export const FEATURES = {
+  neon: false,
+  stamps: false,
+  nightPage: false,
+};
+
+const HIDDEN_TOOLS: Tool[] = [...(FEATURES.neon ? [] : ['neon' as const]), ...(FEATURES.stamps ? [] : ['stamp' as const])];
+
 /** The tool bar, left to right. Emoji keep the UI picture-only: no reading needed. */
-export const TOOLS: { id: Tool; icon: string }[] = [
+const ALL_TOOLS: { id: Tool; icon: string }[] = [
   { id: 'crayon', icon: '🖍️' },
   { id: 'rainbow', icon: '🌈' },
   { id: 'neon', icon: '💡' },
@@ -18,6 +30,8 @@ export const TOOLS: { id: Tool; icon: string }[] = [
   { id: 'fill', icon: '🪣' },
   { id: 'eraser', icon: '🧽' },
 ];
+
+export const TOOLS = ALL_TOOLS.filter((t) => !HIDDEN_TOOLS.includes(t.id));
 
 export const STAMPS: StampId[] = ['star', 'heart', 'flower', 'bubble'];
 

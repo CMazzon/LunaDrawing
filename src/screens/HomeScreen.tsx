@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawingThumb } from '../components/DrawingThumb';
 import { drawings, type Drawing } from '../drawings';
 import { tick } from '../haptics';
-import { PAPERS, TITLE_COLORS, UI } from '../theme';
+import { FEATURES, PAPERS, TITLE_COLORS, UI } from '../theme';
 
 type Props = {
   onOpen: (drawing: Drawing | null, paper: string) => void;
@@ -30,9 +30,11 @@ export function HomeScreen({ onOpen }: Props) {
           <Tile size={tile} label="blank page" color={PAPERS.white} onPress={() => open(null, PAPERS.white)}>
             <Text style={{ fontSize: tile * 0.4 }}>🖍️</Text>
           </Tile>
-          <Tile size={tile} label="night page" color={PAPERS.night} onPress={() => open(null, PAPERS.night)}>
-            <Text style={{ fontSize: tile * 0.4 }}>🌙</Text>
-          </Tile>
+          {FEATURES.nightPage && (
+            <Tile size={tile} label="night page" color={PAPERS.night} onPress={() => open(null, PAPERS.night)}>
+              <Text style={{ fontSize: tile * 0.4 }}>🌙</Text>
+            </Tile>
+          )}
           {drawings.map((d) => (
             <Tile key={d.id} size={tile} label={d.name} color={PAPERS.white} onPress={() => open(d, PAPERS.white)}>
               <DrawingThumb drawing={d} size={tile - 16} />

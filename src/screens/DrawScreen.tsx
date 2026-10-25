@@ -44,7 +44,7 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
   const [history, setHistory] = useState<History>(emptyHistory);
   const [tool, setTool] = useState<Tool>(drawing ? 'fill' : 'crayon');
   const [color, setColor] = useState(paper === '#FFFFFF' ? PALETTE[0] : PALETTE[2]);
-  const [size, setSize] = useState(SIZES[1]);
+  const [size, setSize] = useState(SIZES[SIZES.length - 1]);
   const [stamp, setStamp] = useState<StampId>('star');
   const [symmetry, setSymmetry] = useState<Symmetry>(1);
   const [box, setBox] = useState({ width: 0, height: 0 });
@@ -128,6 +128,7 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
       bump();
       return;
     }
+    tick();
     current.current = {
       kind: 'stroke',
       brush: tool,
@@ -186,14 +187,21 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'bottom', 'left', 'right']}>
       <View style={styles.topBar}>
-        <RoundButton icon="🏠" label="home" onPress={onHome} />
+        <RoundButton
+          icon="🏠"
+          label="home"
+          onPress={() => {
+            tick();
+            onHome();
+          }}
+        />
         <View style={styles.row}>
           <RoundButton
             icon="↩️"
             label="undo"
             disabled={!canUndo(history)}
             onPress={() => {
-              tick();
+              bump();
               setHistory(undo);
             }}
           />
@@ -206,7 +214,14 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
               setHistory(clear);
             }}
           />
-          <RoundButton icon="📸" label="save picture" onPress={save} />
+          <RoundButton
+            icon="📸"
+            label="save picture"
+            onPress={() => {
+              tick();
+              save();
+            }}
+          />
         </View>
       </View>
 

@@ -9,6 +9,12 @@ export type History = { actions: Action[]; cleared: Action[] | null };
 export const emptyHistory: History = { actions: [], cleared: null };
 
 export function add(h: History, action: Action): History {
+  // Tapping the same spot with the same color again changes nothing on screen,
+  // so it shouldn't need an extra undo either.
+  const last = h.actions[h.actions.length - 1];
+  if (action.kind === 'fill' && last?.kind === 'fill' && last.region === action.region && last.color === action.color) {
+    return h;
+  }
   return { actions: [...h.actions, action], cleared: null };
 }
 

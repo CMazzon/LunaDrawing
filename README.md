@@ -4,12 +4,15 @@ A super simple drawing and coloring app for kids 3+, for **iOS and Android**.
 
 - **No accounts, no ads, no internet, no tracking.** Nothing leaves the device.
 - **No reading needed.** Every button is a big picture.
-- **Magic brushes:** crayon 🖍️, rainbow 🌈, glowing neon 💡, sparkles ✨, stamps ⭐ ❤️ 🌸 🫧, paint bucket 🪣, eraser 🧽.
+- **Magic brushes:** crayon 🖍️, rainbow 🌈, sparkles ✨, paint bucket 🪣, eraser 🧽.
+  Glowing neon 💡, stamps ⭐ ❤️ 🌸 🫧 and the night page 🌙 are built but switched off for now:
+  turn them back on in `FEATURES` in [`src/theme.ts`](src/theme.ts).
+- **Big colored pencils** to pick colors: the chosen one pops up out of the box.
 - **Mirror 🦋 and kaleidoscope ❄️ modes:** one scribble becomes a butterfly or a snowflake.
 - **Coloring pages** that fill like a real bucket: tap the cat's face and the eyes stay white.
-- **Night paper 🌙:** a dark page where the neon brush glows.
 - **Undo everything**, even the trash can, so an accidental tap never loses a picture.
 - **Save to Photos 📸** with a little celebration.
+- **Haptic feedback** on every tap and stroke (vibration on Android, also in the web version).
 
 Built with [Expo](https://expo.dev) (React Native) and [React Native Skia](https://shopify.github.io/react-native-skia/): one TypeScript codebase for both stores.
 
