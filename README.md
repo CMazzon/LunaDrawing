@@ -82,6 +82,22 @@ npm test            # engine + drawings tests (runs real Skia in Node)
 npm run typecheck
 ```
 
+## Install on an Android tablet or phone (APK)
+
+Builds run on Expo's servers (EAS), so you don't need Android Studio. You need a free account at [expo.dev](https://expo.dev/signup).
+
+```bash
+npx eas-cli@latest login
+npx eas-cli@latest init        # first time only: links this folder to an Expo project
+npx eas-cli@latest build --platform android --profile preview
+```
+
+The build takes about 10–15 minutes. When it's done, the terminal shows a **QR code**: scan it with the tablet,
+download the APK and open it (Android asks once to allow installing apps from your browser).
+The same link is on your build page at expo.dev, and you can share it with other testers.
+
+Profiles live in [`eas.json`](eas.json): `preview` makes an installable APK, `production` makes the bundle Google Play wants.
+
 ## Publishing to the App Store and Google Play
 
 Use [EAS Build](https://docs.expo.dev/build/introduction/): no Mac needed for iOS.
