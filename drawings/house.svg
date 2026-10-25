@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" stroke="#222" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" fill="white">
+  <title>House</title>
+  <circle cx="68" cy="66" r="34"/>
+  <path fill="none" d="M68 14 V2 M68 118 V130 M16 66 H4 M120 66 H132 M31 29 L23 21 M105 29 L113 21 M31 103 L23 111 M105 103 L113 111"/>
+  <rect x="268" y="80" width="40" height="80"/>
+  <polygon points="58,196 200,74 342,196"/>
+  <rect x="88" y="196" width="224" height="166"/>
+  <rect x="170" y="262" width="60" height="100" rx="8"/>
+  <rect x="110" y="218" width="46" height="46"/>
+  <rect x="244" y="218" width="46" height="46"/>
+  <path fill="none" d="M133 218 V264 M110 241 H156 M267 218 V264 M244 241 H290"/>
+  <circle cx="218" cy="314" r="5"/>
+  <path fill="none" d="M18 362 H382"/>
+</svg>

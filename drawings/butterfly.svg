@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" stroke="#222" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" fill="white">
+  <title>Butterfly</title>
+  <path d="M200 195 C150 80 40 70 52 165 C60 228 150 224 200 205 Z"/>
+  <path d="M200 195 C250 80 360 70 348 165 C340 228 250 224 200 205 Z"/>
+  <path d="M200 210 C140 222 74 262 106 326 C136 372 192 296 200 236 Z"/>
+  <path d="M200 210 C260 222 326 262 294 326 C264 372 208 296 200 236 Z"/>
+  <circle cx="118" cy="142" r="24"/>
+  <circle cx="282" cy="142" r="24"/>
+  <circle cx="142" cy="290" r="16"/>
+  <circle cx="258" cy="290" r="16"/>
+  <ellipse cx="200" cy="222" rx="15" ry="72"/>
+  <circle cx="200" cy="138" r="20"/>
+  <path fill="none" d="M193 122 Q178 82 158 74 M207 122 Q222 82 242 74"/>
+  <circle cx="156" cy="72" r="7"/>
+  <circle cx="244" cy="72" r="7"/>
+</svg>

@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Luna Drawing",
+    "slug": "luna-drawing",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFF4D6",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFF4D6"
+    },
+    "ios": {
+      "bundleIdentifier": "com.cmazzon.lunadrawing",
+      "supportsTablet": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.cmazzon.lunadrawing",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF4D6",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": false,
+          "savePhotosPermission": "Luna Drawing saves your pictures to Photos.",
+          "granularPermissions": ["photo"]
+        }
+      ]
+    ]
+  }
+}

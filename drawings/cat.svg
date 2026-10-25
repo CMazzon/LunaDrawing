@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" stroke="#222" stroke-width="8" stroke-linejoin="round" stroke-linecap="round" fill="white">
+  <title>Cat</title>
+  <path d="M280 330 C365 335 385 240 348 200 C336 188 318 196 326 214 C345 252 335 300 282 300 Z"/>
+  <ellipse cx="200" cy="292" rx="95" ry="85"/>
+  <polygon points="132,125 142,42 196,92"/>
+  <polygon points="268,125 258,42 204,92"/>
+  <circle cx="200" cy="162" r="80"/>
+  <ellipse cx="158" cy="368" rx="32" ry="18"/>
+  <ellipse cx="242" cy="368" rx="32" ry="18"/>
+  <circle cx="170" cy="150" r="13"/>
+  <circle cx="230" cy="150" r="13"/>
+  <polygon points="188,180 212,180 200,194"/>
+  <path fill="none" d="M200 194 Q192 212 176 204 M200 194 Q208 212 224 204"/>
+  <path fill="none" d="M146 182 L92 172 M146 194 L92 200 M254 182 L308 172 M254 194 L308 200"/>
+</svg>

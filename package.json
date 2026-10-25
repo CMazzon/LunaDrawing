@@ -1,0 +1,50 @@
+{
+  "name": "luna-drawing",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@expo/metro-runtime": "~58.0.15",
+    "@shopify/react-native-skia": "2.14.0",
+    "expo": "~58.0.19",
+    "expo-file-system": "~58.0.11",
+    "expo-haptics": "~58.0.7",
+    "expo-media-library": "~58.0.12",
+    "expo-status-bar": "~58.0.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-web": "~0.21.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^22.20.5",
+    "@types/react": "~19.3.0",
+    "jest": "^30.5.2",
+    "jest-expo": "~58.0.12",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "setup-skia-web public && expo start --web",
+    "drawings": "node scripts/build-drawings.js",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "testEnvironment": "@shopify/react-native-skia/jestEnv.js",
+    "setupFiles": [
+      "@shopify/react-native-skia/jestSetup.js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@shopify/react-native-skia)"
+    ]
+  }
+}
