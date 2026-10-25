@@ -33,15 +33,6 @@ function shapes() {
 
 export const twinklePath = () => shapes().twinkle;
 
-function paint(color: string, style = PaintStyle.Fill, width = 0) {
-  const p = Skia.Paint();
-  p.setAntiAlias(true);
-  p.setColor(Skia.Color(color));
-  p.setStyle(style);
-  p.setStrokeWidth(width);
-  return p;
-}
-
 export function paintStamp(
   canvas: SkCanvas,
   stamp: StampId,
@@ -51,6 +42,15 @@ export function paintStamp(
   tiltDegrees: number,
   color: string,
 ) {
+  // One paint per stamp, re-colored for each part (Skia objects are costly on web).
+  const p = Skia.Paint();
+  p.setAntiAlias(true);
+  const paint = (c: string, style = PaintStyle.Fill, width = 0) => {
+    p.setColor(Skia.Color(c));
+    p.setStyle(style);
+    p.setStrokeWidth(width);
+    return p;
+  };
   canvas.save();
   canvas.translate(x, y);
   canvas.rotate(tiltDegrees, 0, 0);

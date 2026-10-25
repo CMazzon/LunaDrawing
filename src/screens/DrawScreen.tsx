@@ -1,4 +1,4 @@
-import { Canvas, Picture, Skia } from '@shopify/react-native-skia';
+import { Canvas, Image as SkiaImage, Picture } from '@shopify/react-native-skia';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   BackHandler,
@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Celebration } from '../components/Celebration';
 import { ColorPalette } from '../components/ColorPalette';
+import { LiveStroke, type LiveStrokeHandle } from '../components/LiveStroke';
 import { RoundButton } from '../components/RoundButton';
 import { StampIcon } from '../components/StampIcon';
 import type { Drawing } from '../drawings';
@@ -20,9 +21,11 @@ import { distance } from '../engine/geometry';
 import { add, canUndo, clear, emptyHistory, undo, type History } from '../engine/history';
 import { fitPage, hitTest, preparePage } from '../engine/page';
 import { newSeed } from '../engine/random';
-import { backgroundColor, recordOutline, recordScene, recordStroke, recordSymmetryGuide } from '../engine/render';
+import { flatten } from '../engine/raster';
+import { backgroundColor, recordOutline, recordScene, recordSymmetryGuide } from '../engine/render';
 import { BACKGROUND, type Point, type StampId, type Stroke, type Symmetry } from '../engine/types';
 import { bump, cheer, tick } from '../haptics';
+import { useDisposeReplaced } from '../hooks';
 import { savePicture } from '../save';
 import { PALETTE, SIZES, STAMPS, TOOLS, UI, type Tool } from '../theme';
 
@@ -47,18 +50,33 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
   const [box, setBox] = useState({ width: 0, height: 0 });
   const [party, setParty] = useState(0);
 
-  // The stroke under the finger. Kept in a ref (it changes on every move);
-  // `redraw` asks React to paint it.
+  // The stroke under the finger. Touch moves only add points here; the
+  // LiveStroke layer repaints at most once per screen refresh, so a slow
+  // device drops frames instead of falling behind the finger.
   const current = useRef<Stroke | null>(null);
-  const [, setFrame] = useState(0);
-  const redraw = () => setFrame((f) => f + 1);
+  const live = useRef<LiveStrokeHandle | null>(null);
+  const frameRequest = useRef<number | null>(null);
+  const redraw = () => {
+    if (frameRequest.current !== null) return;
+    frameRequest.current = requestAnimationFrame(() => {
+      frameRequest.current = null;
+      live.current?.redraw();
+    });
+  };
+  const cancelRedraw = () => {
+    if (frameRequest.current !== null) cancelAnimationFrame(frameRequest.current);
+    frameRequest.current = null;
+  };
 
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
       onHome();
       return true;
     });
-    return () => sub.remove();
+    return () => {
+      sub.remove();
+      cancelRedraw();
+    };
   }, [onHome]);
 
   const { width, height } = box;
@@ -79,7 +97,18 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
     () => (ready ? recordSymmetryGuide(symmetry, width, height, background) : null),
     [symmetry, ready, width, height, background],
   );
-  const live = current.current && ready ? recordStroke(current.current, width, height, background) : null;
+  // Finished strokes and the outlines are flattened into images: one cheap
+  // draw per frame instead of replaying everything.
+  const sceneImage = useMemo(() => (scene ? flatten([scene], width, height) : null), [scene, width, height]);
+  const outlineImage = useMemo(
+    () => (outline ? flatten([outline], width, height) : null),
+    [outline, width, height],
+  );
+  useDisposeReplaced(scene);
+  useDisposeReplaced(sceneImage);
+  useDisposeReplaced(outline);
+  useDisposeReplaced(outlineImage);
+  useDisposeReplaced(guide);
 
   const onLayout = (e: LayoutChangeEvent) => {
     const { width: w, height: h } = e.nativeEvent.layout;
@@ -125,27 +154,24 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
   const onTouchEnd = () => {
     const stroke = current.current;
     if (!stroke) return;
+    cancelRedraw();
     current.current = null;
     setHistory((h) => add(h, stroke));
   };
 
   const save = async () => {
     if (!scene) return;
-    const scale = PixelRatio.get();
-    const surface = Skia.Surface.Make(Math.round(width * scale), Math.round(height * scale));
-    if (!surface) return;
-    const canvas = surface.getCanvas();
-    canvas.scale(scale, scale);
-    canvas.drawPicture(scene);
-    if (outline) canvas.drawPicture(outline);
-    surface.flush();
+    const image = flatten(outline ? [scene, outline] : [scene], width, height, PixelRatio.get());
+    if (!image) return;
     try {
-      if (await savePicture(surface.makeImageSnapshot())) {
+      if (await savePicture(image)) {
         cheer();
         setParty((n) => n + 1);
       }
     } catch (err) {
       console.warn('Could not save the picture', err);
+    } finally {
+      image.dispose();
     }
   };
 
@@ -197,10 +223,12 @@ export function DrawScreen({ drawing, paper, onHome }: Props) {
       >
         {ready && (
           <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
-            {scene && <Picture picture={scene} />}
+            {sceneImage && <SkiaImage image={sceneImage} x={0} y={0} width={width} height={height} fit="fill" />}
             {guide && <Picture picture={guide} />}
-            {live && <Picture picture={live} />}
-            {outline && <Picture picture={outline} />}
+            <LiveStroke stroke={current} handle={live} width={width} height={height} background={background} />
+            {outlineImage && (
+              <SkiaImage image={outlineImage} x={0} y={0} width={width} height={height} fit="fill" />
+            )}
           </Canvas>
         )}
       </View>

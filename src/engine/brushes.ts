@@ -63,13 +63,14 @@ function rainbow(canvas: SkCanvas, s: Stroke) {
     canvas.drawCircle(s.points[0].x, s.points[0].y, width / 2, fillPaint(hslToHex(startHue, 90, 55)));
     return;
   }
+  const paint = strokePaint('#000000', width);
   let travelled = 0;
   for (let i = 1; i < s.points.length; i++) {
     const a = s.points[i - 1];
     const b = s.points[i];
     travelled += Math.hypot(b.x - a.x, b.y - a.y);
-    const color = hslToHex((startHue + travelled * 0.8) % 360, 90, 55);
-    canvas.drawLine(a.x, a.y, b.x, b.y, strokePaint(color, width));
+    paint.setColor(Skia.Color(hslToHex((startHue + travelled * 0.8) % 360, 90, 55)));
+    canvas.drawLine(a.x, a.y, b.x, b.y, paint);
   }
 }
 
@@ -91,14 +92,15 @@ function sparkle(canvas: SkCanvas, s: Stroke) {
   const rand = seededRandom(s.seed);
   const colors = [s.color, s.color, lighten(s.color, 0.5), '#FFD60A', '#FFFFFF'];
   const twinkle = twinklePath();
+  const paint = fillPaint(s.color);
   walk(s.points, Math.max(4, s.size * 0.6), (p) => {
     const angle = rand() * Math.PI * 2;
     const dist = rand() * s.size * 1.1;
     const x = p.x + Math.cos(angle) * dist;
     const y = p.y + Math.sin(angle) * dist;
-    const color = colors[Math.floor(rand() * colors.length)];
+    paint.setColor(Skia.Color(colors[Math.floor(rand() * colors.length)]));
     if (rand() < 0.35) {
-      canvas.drawCircle(x, y, Math.max(1.5, s.size * 0.12), fillPaint(color));
+      canvas.drawCircle(x, y, Math.max(1.5, s.size * 0.12), paint);
       return;
     }
     const r = s.size * (0.25 + rand() * 0.45);
@@ -106,7 +108,7 @@ function sparkle(canvas: SkCanvas, s: Stroke) {
     canvas.translate(x, y);
     canvas.rotate(rand() * 45, 0, 0);
     canvas.scale(r, r);
-    canvas.drawPath(twinkle, fillPaint(color));
+    canvas.drawPath(twinkle, paint);
     canvas.restore();
   });
 }
